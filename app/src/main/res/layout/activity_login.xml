@@ -5,15 +5,15 @@
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.macbookair.laprichat.RegisterActivity">
+    tools:context="com.example.macbookair.laprichat.LoginActivity">
 
-    <include layout="@layout/app_bar_layout" android:id="@+id/activity_register_toolbar"/>
+    <include layout="@layout/app_bar_layout" android:id="@+id/activity_login_toolbar"/>
 
     <android.support.design.widget.TextInputLayout
         android:layout_marginTop="150dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/register_activity_name_field"
+        android:id="@+id/login_activity_email"
         android:paddingStart="15dp"
         android:paddingLeft="15dp"
         android:paddingEnd="15dp"
@@ -22,16 +22,17 @@
         <EditText
 
             android:textSize="24sp"
+            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name...." />
+            android:hint="Email...." />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/register_activity_mail_field"
+        android:id="@+id/login_activity_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/register_activity_name_field"
+        android:layout_below="@+id/login_activity_email"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp"
         android:paddingStart="15dp"
@@ -41,44 +42,24 @@
 
         <EditText
             android:textSize="24sp"
-            android:inputType="textEmailAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Eail...." />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:paddingStart="15dp"
-        android:paddingLeft="15dp"
-        android:paddingEnd="15dp"
-        android:paddingRight="15dp"
-        android:id="@+id/register_activity_pass_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:layout_below="@+id/register_activity_mail_field"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <EditText
             android:inputType="textPassword"
-            android:textSize="24sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password...." />
     </android.support.design.widget.TextInputLayout>
 
+
     <Button
         android:textSize="20sp"
-        android:text="Create account..."
+        android:text="Sign in..."
         android:layout_height="wrap_content"
-        android:layout_below="@+id/register_activity_pass_field"
+        android:layout_below="@+id/login_activity_pass"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="42dp"
         android:layout_marginEnd="42dp"
         android:layout_marginTop="40dp"
-        android:id="@+id/register_activity_btn_create"
+        android:id="@+id/login_activity_login_btn"
         android:background="@color/colorAccent"
         android:textColor="#FFFFFF"
         android:layout_width="230dp" />
@@ -89,12 +70,12 @@
         android:maxWidth="150sp"
         android:textStyle="bold"
         android:textSize="24sp"
-        android:text="Register account"
+        android:text="Welcome .. .."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:id="@+id/register_activity_account_registration_text"
-        android:layout_below="@+id/activity_register_toolbar"
+        android:id="@+id/login_activity_welcome_Text"
+        android:layout_below="@+id/activity_login_toolbar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
