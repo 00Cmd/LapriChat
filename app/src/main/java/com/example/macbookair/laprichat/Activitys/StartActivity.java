@@ -1,10 +1,14 @@
-package com.example.macbookair.laprichat;
+package com.example.macbookair.laprichat.Activitys;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.macbookair.laprichat.Activitys.UserActions.LoginActivity;
+import com.example.macbookair.laprichat.R;
+import com.example.macbookair.laprichat.Activitys.UserActions.RegisterActivity;
 
 public class StartActivity extends AppCompatActivity {
     private Button btnCreate,btnLogin;

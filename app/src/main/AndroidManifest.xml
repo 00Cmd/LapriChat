@@ -12,18 +12,21 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StartActivity" />
+        <activity android:name=".Activitys.StartActivity" />
         <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".StartActivity" />
-        <activity android:name=".LoginActivity"></activity>
+            android:name=".Activitys.UserActions.RegisterActivity"
+            android:parentActivityName=".Activitys.StartActivity" />
+        <activity
+            android:name=".Activitys.UserActions.LoginActivity"
+            android:parentActivityName=".Activitys.StartActivity" />
+        <activity android:name=".Activitys.UserActions.SettingsActivity" />
     </application>
 
 </manifest>
