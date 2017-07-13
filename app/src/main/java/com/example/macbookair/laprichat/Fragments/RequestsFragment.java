@@ -19,17 +19,28 @@ import com.example.macbookair.laprichat.R;
 public class RequestsFragment extends Fragment {
     private static final String TAG = "RequestsFragment";
 
+    private int mPage;
+
+    public static RequestsFragment newInstance(int page) {
+        Bundle args = new Bundle();
+        args.putInt(TAG, page);
+        RequestsFragment fragment = new RequestsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPage = getArguments().getInt(TAG);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.request_fragment,container,false);
-        TextView txtView = (TextView) view.findViewById(R.id.page_fragment_textView);
+        TextView txtView = (TextView) view.findViewById(R.id.request_fragment_textView);
         return view;
 
     }

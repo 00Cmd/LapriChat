@@ -19,6 +19,7 @@
             android:background="@color/colorPrimary"
             android:id="@+id/tabs"
             app:tabMode="fixed"
+            app:tabTextColor="@color/colorWhite"
             android:layout_gravity="top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

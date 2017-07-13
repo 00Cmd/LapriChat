@@ -16,7 +16,7 @@ import com.example.macbookair.laprichat.Fragments.RequestsFragment;
 public class TabFragmentPageAdapter extends FragmentPagerAdapter {
 
 
-    private String tabTitles[] = {"Tab1","Tab2","Tab3"};
+    private String tabTitles[] = {"Requests","Chat","Friends"};
     private Context mCtx;
 
     public TabFragmentPageAdapter(FragmentManager fm,Context context) {
@@ -28,11 +28,11 @@ public class TabFragmentPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new RequestsFragment();
+                return RequestsFragment.newInstance(position);
             case 1:
-                return new ChatFragment();
+                return ChatFragment.newInstance(position);
             case 2:
-                return new FriendsFragment();
+                return FriendsFragment.newInstance(position);
             default:
                 return null;
         }
