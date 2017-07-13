@@ -8,20 +8,18 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.example.macbookair.laprichat.Fragments.Tab2Fragment;
-import com.example.macbookair.laprichat.Fragments.Tab3Fragment;
+import com.example.macbookair.laprichat.Adapters.TabFragmentPageAdapter;
 import com.example.macbookair.laprichat.R;
-import com.example.macbookair.laprichat.Adapteres.SectionPageAdapter;
-import com.example.macbookair.laprichat.Fragments.Tab1Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private SectionPageAdapter mSectionPageAdapter;
     private ViewPager mViewPager;
+    private TabLayout tabLayout;
 
     private FirebaseAuth mAuth;
     private Toolbar mToolbar;
@@ -31,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
         findAndSet();
+        onClickAction();
         mAuth = FirebaseAuth.getInstance();
         mToolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(mToolbar);
@@ -41,21 +39,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Tab1Fragment(), "REQUESTS");
-        adapter.addFragment(new Tab2Fragment(), "CHAT");
-        adapter.addFragment(new Tab3Fragment(), "FRIENDS");
-        viewPager.setAdapter(adapter);
+    private void onClickAction() {
+
     }
 
     private void findAndSet() {
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        setupViewPager(mViewPager);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        mViewPager = (ViewPager) findViewById(R.id.main_activity_pager);
+        mViewPager.setAdapter(new TabFragmentPageAdapter(getSupportFragmentManager(),MainActivity.this));
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
