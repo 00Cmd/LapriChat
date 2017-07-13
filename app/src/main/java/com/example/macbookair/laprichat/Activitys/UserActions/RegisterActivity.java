@@ -18,11 +18,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout inputName,inputMail,inputPass;
     private Button btnCreate;
     private FirebaseAuth mAuth;
+    private DatabaseReference mRef;
     private Toolbar mToolbar;
     private ProgressDialog mProgressDialog;
 
@@ -57,17 +63,33 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser(String userName, String userMail, String userPass) {
+    private void registerUser(String userName, final String userMail, String userPass) {
         mAuth.createUserWithEmailAndPassword(userMail,userPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                    finish();
-                    mProgressDialog.hide();
-                } else {
-                    mProgressDialog.hide();
-                    Toast.makeText(RegisterActivity.this, "Error .....", Toast.LENGTH_SHORT).show();
+
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    String uid = user.getUid();
+                    mRef = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                    HashMap<String, String> userMap = new HashMap<String, String>();
+                    userMap.put("Name", inputName.getEditText().getText().toString());
+                    userMap.put("Status", "Hello i'm using lapi chat.");
+                    userMap.put("Image", "defaultUrl");
+                    userMap.put("Thub_img", "thumbUrl");
+                    mRef.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                finish();
+                                mProgressDialog.hide();
+                            } else {
+                                mProgressDialog.hide();
+                                Toast.makeText(RegisterActivity.this, "Error .....", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });

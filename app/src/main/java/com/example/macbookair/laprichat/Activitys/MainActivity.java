@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.macbookair.laprichat.Activitys.UserActions.SettingsActivity;
 import com.example.macbookair.laprichat.Adapters.TabFragmentPageAdapter;
 import com.example.macbookair.laprichat.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 mAuth.signOut();
                 startActivity(new Intent(MainActivity.this, StartActivity.class));
                 finish();
+                break;
+            case R.id.main_page_settings_btn:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
         }
         return true;
