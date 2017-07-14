@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.macbookair.laprichat.Activitys.UserActions.SettingsActivity;
+import com.example.macbookair.laprichat.Activitys.UserActions.UsersActivity;
 import com.example.macbookair.laprichat.Adapters.TabFragmentPageAdapter;
 import com.example.macbookair.laprichat.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_page_settings_btn:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
+
+            case R.id.main_page_show_users_btn:
+                startActivity(new Intent(MainActivity.this, UsersActivity.class));
         }
         return true;
     }
