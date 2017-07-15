@@ -2,10 +2,12 @@ package com.example.macbookair.laprichat.Activitys.UserActions;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,11 +30,20 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
+
+import static android.R.attr.bitmap;
 
 public class SettingsActivity extends AppCompatActivity {
+    private static final String TAG = "SettingsActivity";
     private DatabaseReference mRef;
     private CircleImageView circleImageView;
     private TextView userName,userStatus;
@@ -61,7 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
 
                 userName.setText(name);
                 userStatus.setText(status);
-                Picasso.with(SettingsActivity.this).load(image).into(circleImageView);
+                if (!name.equals("default")) {
+                    Picasso.with(SettingsActivity.this).load(image).placeholder(R.drawable.default_avatar).into(circleImageView);
+                }
             }
 
             @Override
@@ -115,30 +128,60 @@ public class SettingsActivity extends AppCompatActivity {
                 mProgressDialog.show();
 
                 imgUri = result.getUri();
-                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                StorageReference storageRef = mStorageRef.child("profile_images").child(uid + ".jpg");
-                storageRef.putFile(imgUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            String downloadUrl = task.getResult().getDownloadUrl().toString();
 
-                            mRef.child("Image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+
+                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                File thumbFilePath = new File(imgUri.getPath());
+                Bitmap thumbBitmap = null;
+                try {
+                     thumbBitmap = new Compressor(this).
+                            setMaxWidth(200).setMaxHeight(200).setQuality(75).
+                            compressToBitmap(thumbFilePath);
+                } catch (IOException e) {
+                    Log.d(TAG, "Settings Activity -> onActivityResult ->  " + e.getMessage());
+                }
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    thumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    final byte[] thumbByte = baos.toByteArray();
+
+                StorageReference profileImageStorage = mStorageRef.child("profile_images").child(uid + ".jpg");
+                final StorageReference thumbImageStorage = mStorageRef.child("profile_images").child("thumb_img").child(uid + ".jpg");
+
+
+                profileImageStorage.putFile(imgUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            final String downloadUrl = task.getResult().getDownloadUrl().toString();
+                            UploadTask uploadTask = thumbImageStorage.putBytes(thumbByte);
+                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()) {
-                                        mProgressDialog.dismiss();
-                                        Toast.makeText(SettingsActivity.this, "Success..", Toast.LENGTH_SHORT).show();
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> thumbTask) {
+                                    String thumbUrl = task.getResult().getDownloadUrl().toString();
+                                    if (thumbTask.isSuccessful()) {
+                                        Map updateHashMap = new HashMap();
+                                        updateHashMap.put("Image",downloadUrl);
+                                        updateHashMap.put("Thumb_img",thumbUrl);
+                                        mRef.updateChildren(updateHashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()) {
+                                                    mProgressDialog.dismiss();
+                                                    Toast.makeText(SettingsActivity.this, "Success..", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    mProgressDialog.dismiss();
+                                                    Toast.makeText(SettingsActivity.this, "Failed uploading", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
                                     } else {
                                         mProgressDialog.dismiss();
-                                        Toast.makeText(SettingsActivity.this, "Failed uploading", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SettingsActivity.this, "Not working", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
-
-                        } else {
-                            mProgressDialog.dismiss();
-                            Toast.makeText(SettingsActivity.this, "Not working", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

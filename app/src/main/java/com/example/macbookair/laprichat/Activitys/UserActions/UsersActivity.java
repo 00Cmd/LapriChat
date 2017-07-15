@@ -1,5 +1,8 @@
 package com.example.macbookair.laprichat.Activitys.UserActions;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +19,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -25,8 +29,6 @@ public class UsersActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private DatabaseReference mRef;
-    private TextView userName,userStatus;
-    private CircleImageView mImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +39,8 @@ public class UsersActivity extends AppCompatActivity {
     }
 
     private void find() {
-        userName = (TextView)findViewById(R.id.user_name);
-        userStatus = (TextView)findViewById(R.id.user_status);
+//        userName = (TextView)findViewById(R.id.user_name);
+//        userStatus = (TextView)findViewById(R.id.user_status);
         mToolbar = (Toolbar) findViewById(R.id.activity_users_bar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("All users");
@@ -63,9 +65,23 @@ public class UsersActivity extends AppCompatActivity {
             protected void populateViewHolder(UsersViewHolder viewHolder, Users model, int position) {
                 viewHolder.setName(model.getName());
                 viewHolder.setStatus(model.getStatus());
-git            }
+                viewHolder.setImage(model.getThumb_img(),getApplicationContext());
+
+                final String uid = getRef(position).getKey();
+
+                mRecyclerView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(UsersActivity.this,ProfileActivity.class);
+                        i.putExtra("user_id",uid);
+                        startActivity(i);
+                    }
+                });
+
+            }
         };
         mRecyclerView.setAdapter(firebaseRecyclerAdapter);
+
     }
 
 
@@ -86,6 +102,11 @@ git            }
         public void setStatus(String status) {
             TextView mText = (TextView)mView.findViewById(R.id.user_status);
             mText.setText(status);
+        }
+
+        public void setImage(String thumbUrl, Context ctx) {
+            CircleImageView mImage = (CircleImageView) mView.findViewById(R.id.user_avatar);
+            Picasso.with(ctx).load(thumbUrl).placeholder(R.drawable.default_avatar).into(mImage);
         }
 
     }
